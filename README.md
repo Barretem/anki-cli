@@ -32,17 +32,17 @@ Add a command to your package.json. For example:
 pnpm run sync
 ```
 
-## Docs
-
-以下是一个假设的用户管理系统的 API 表格说明示例：
-
-### 用户管理 API
+## Config
 
 | Config | Description | Type | Default |
 |:--:|:--:|:--:|:--:|
 | --dirPath | sync dirname | string | ./ |
 | --rootDeckName | anki root deck name | string | notes |
 | --ankiServiceUrl | anki connect HTTP server url | string | http://127.0.0.1:8765 |
+
+## Notes
+
+Fork from [anki](https://github.com/jasonwilliams/anki). Thanks!
 
 ## License
 MIT
