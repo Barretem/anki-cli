@@ -1,5 +1,5 @@
 {
-  "name": "anki-cli",
+  "name": "@barretter/anki-cli",
   "version": "0.0.1",
   "description": "cli tool",
   "main": "index.js",
