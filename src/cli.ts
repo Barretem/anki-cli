@@ -1,6 +1,7 @@
 import * as minimist from 'minimist'
 
 import { getPkgVersion } from './util'
+import Sync from './sync/index';
 
 export default class CLI {
   appPath: string
@@ -17,17 +18,11 @@ export default class CLI {
       alias: {
         version: ['v'],
         help: ['h'],
-        port: ['p'],
-        resetCache: ['reset-cache'], // specially for rn, Removes cached files.
-        publicPath: ['public-path'], // specially for rn, assets public path.
-        bundleOutput: ['bundle-output'], // specially for rn, File name where to store the resulting bundle.
-        sourcemapOutput: ['sourcemap-output'], // specially for rn, File name where to store the sourcemap file for resulting bundle.
-        sourceMapUrl: ['sourcemap-use-absolute-path'], // specially for rn, Report SourceMapURL using its full path.
-        sourcemapSourcesRoot: ['sourcemap-sources-root'], // specially for rn, Path to make sourcemaps sources entries relative to.
-        assetsDest: ['assets-dest'], // specially for rn, Directory name where to store assets referenced in the bundle.
-        envPrefix: ['env-prefix'],
+        dirPath: ['p'], // 要转换的文件夹路径.
+        ankiServiceUrl: ['a'], // anki connect 的地址
+        rootDeckName: ['r'], // 根分组名
       },
-      boolean: ['version', 'help', 'disable-global-config'],
+      boolean: ['version', 'help'],
       default: {
         build: true,
       },
@@ -36,7 +31,13 @@ export default class CLI {
     const command = _[0]
     if (command) {
       switch (command) {
-        case 'build': {
+        case 'sync': {
+          const sync = new Sync({
+            ankiServiceUrl: args.ankiServiceUrl,
+            dirPath: args.dirPath,
+            rootDeckName: args.rootDeckName,
+          });
+          sync.start();
           break;
         }
         default:
