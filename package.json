@@ -1,6 +1,6 @@
 {
   "name": "@barretter/anki-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "anki cli tool",
   "main": "index.js",
   "types": "dist/index.d.ts",
