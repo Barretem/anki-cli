@@ -45,4 +45,4 @@ pnpm run sync
 Fork from [anki](https://github.com/jasonwilliams/anki). Thanks!
 
 ## License
-MIT
+[MIT](./LICENSE)
