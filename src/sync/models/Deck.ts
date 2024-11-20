@@ -1,4 +1,5 @@
 import * as chalk from 'chalk';
+import * as TurndownService from 'turndown';
 import config from "../config";
 import { AnkiService } from "../AnkiService";
 import { Card } from "./Card";
@@ -9,6 +10,7 @@ export class Deck {
   public cards: Card[];
   private mediaCollection: any[];
   private ankiService?: AnkiService;
+  private turndownService: TurndownService;
   /** Id is optional on Decks because they can be created before syncing back to Anki.
    * Therefore, newly created decks won't have IDs (this is currently not implemented though)
    * So for now we can assume all decks have an id.
@@ -19,6 +21,7 @@ export class Deck {
     this.name = name;
     this.cards = [];
     this.mediaCollection = [];
+    this.turndownService = new TurndownService()
   }
 
   setId(id: number): Deck {
@@ -124,18 +127,18 @@ export class Deck {
     let newCards: Card[] = [];
     // 查找出已经存在的卡片
     for(const card of this.cards) {
-      const searchQueryQuestion = card.question.replace(/\(|\)|\\/g, function (matches) {
+      const searchQueryQuestion: string = (this.turndownService.turndown(card.question) || '').replace(/\:|\*|\`|\\\=/g, function (matches) {
         return (
           {
-            '(': '"("',
-            ')': '")"',
-            "\\": '\\\\'
+            ':': '\\:',
+            '*': '\*',
           }[matches] || ''
         );
       });
-      const cardIds = await this.ankiService?.findCards(`deck:${this.name} ${searchQueryQuestion}`).catch((err) => {
-        const errorMsg = `find ${card.question} card failed!`
-        console.log(`${chalk.grey(errorMsg)}`);
+
+      const cardIds = await this.ankiService?.findCards(`deck:${this.name} "${searchQueryQuestion}"`).catch((err) => {
+        const errorMsg = `find ${searchQueryQuestion} card failed!`
+        console.log(`${chalk.red(errorMsg)}`);
         throw err
       });
       if (cardIds && cardIds.length) {
@@ -158,7 +161,7 @@ export class Deck {
     }
     if (newCards.length) {
       await this._pushNewCardsToAnki(newCards).catch((err) => {
-        const questionStr = updateCards.reduce((prev, curr) => {
+        const questionStr = newCards.reduce((prev, curr) => {
           return prev + curr.question + ', '
         }, '')
         const errorMsg = `add newCard (${questionStr}) failed!`

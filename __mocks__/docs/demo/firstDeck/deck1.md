@@ -1,5 +1,4 @@
 # firstDeck
 
-## questionA
+## *opacity: 0、visibility: hidden、display: none*？
 
-answer
